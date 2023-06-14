@@ -1,5 +1,5 @@
-int cell_width = 50;
-int cell_height = 6;
+int cell_width = 12;
+int cell_height = 12;
 
 color cold_colour = color(  0,   0, 200);
 color zero_colour = color(100, 100, 100);
@@ -30,8 +30,8 @@ void setup() {
   }
 
   // size() cannot contain expressions, surface.setSize() must be used instead
-  int w = 12 * cell_width;
-  int h = row_count * cell_height;
+  int w = row_count * cell_width;
+  int h = 12 * cell_height;
   surface.setSize(w, h);
 }
 
@@ -70,8 +70,8 @@ void draw() {
   textAlign(align_x, align_y);
 
   // index mouse position to table data
-  int year_index = mouseY / cell_height;
-  int month_index = mouseX / cell_width;
+  int year_index = constrain(mouseX / cell_width, 0, row_count);
+  int month_index = constrain(mouseY / cell_height, 0, 11);
   int year = year_index + first_year;
   String month = months[month_index];
   float anomaly = table_data.getRow(year_index).getFloat(month_index + 1);
@@ -90,10 +90,10 @@ void DrawCells(int max_row) {
 
   for (int r = 0; r < max_row; ++r) {
     TableRow row = table_data.getRow(r);
-    int y = r * cell_height;
+    int x = r * cell_width;
 
     for (int m = 1; m <= 12; ++m) {
-      int x = ((m - 1) * cell_width);
+      int y = ((m - 1) * cell_height);
 
       // temperature anomaly is scaled so that the highs (>= 1.0) don't peak
       float t = row.getFloat(m) / 1.4;
